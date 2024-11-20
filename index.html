@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎂 老趙生日快樂 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: radial-gradient(circle, #ffe6e6, #ffccff);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ff6600;
+      text-shadow: 0 0 10px #fff, 0 0 20px #f00;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #f00;
+      }
+      to {
+        text-shadow: 0 0 20px #fff, 0 0 40px #f00;
+      }
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #444;
+      margin: 10px 20px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .image-container {
+      width: 150px;
+      height: 150px;
+      background: url('https://via.placeholder.com/150') no-repeat center center / cover;
+      border-radius: 50%;
+      margin: 20px 0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      animation: spin 6s infinite linear;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    button {
+      background: #ff6600;
+      color: white;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background: #ff3300;
+    }
+
+    #fireworks {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 幾何背景圖案 */
+    .geometric-pattern {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 10%),
+                  radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 10%);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    .floating-circles {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.2);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      50% { transform: translateY(-50px) scale(1.5); opacity: 0.5; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="geometric-pattern"></div>
+  <div class="floating-circles">
+    <div class="circle" style="width: 80px; height: 80px; top: 10%; left: 20%; animation-duration: 5s;"></div>
+    <div class="circle" style="width: 120px; height: 120px; top: 30%; left: 60%; animation-duration: 7s;"></div>
+    <div class="circle" style="width: 100px; height: 100px; top: 70%; left: 80%; animation-duration: 6s;"></div>
+    <div class="circle" style="width: 150px; height: 150px; top: 80%; left: 10%; animation-duration: 8s;"></div>
+  </div>
+  <div id="main">
+    <div class="image-container"></div>
+    <h1>🎉 老趙，生日快樂！ 🎉</h1>
+    <p>今天是特別的一天，我們衷心祝福您生日快樂！願您的每一天都充滿笑容與希望！</p>
+
+    <div class="buttons">
+      <button onclick="showFireworks()">施放煙火 🎆</button>
+    </div>
+  </div>
+
+  <div id="fireworks">
+    <canvas id="fireworkCanvas"></canvas>
+  </div>
+
+  <audio id="fireworksSound" src="煙火音效路徑" preload="auto"></audio>
+
+  <footer>
+    💖 感謝您辛苦的教導，我們衷心祝福您生日快樂，年年有今日！🎂
+  </footer>
+
+  <script>
+    function showFireworks() {
+      const canvas = document.getElementById('fireworkCanvas');
+      const ctx = canvas.getContext('2d');
+      const fireworks = document.getElementById('fireworks');
+      const fireworksSound = document.getElementById('fireworksSound');
+
+      fireworks.style.display = 'block';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      fireworksSound.currentTime = 0;
+      fireworksSound.play();
+
+      const particles = [];
+      const colors = ['#ff6600', '#ffcc00', '#ff0066', '#6600ff', '#00ff66', '#00ccff'];
+
+      function createParticle(x, y) {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 6 + 2;
+        const particle = {
+          x,
+          y,
+          dx: Math.cos(angle) * speed,
+          dy: Math.sin(angle) * speed,
+          color,
+          life: Math.random() * 40 + 40,
+        };
+        particles.push(particle);
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+          } else {
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            p.x += p.dx;
+            p.y += p.dy;
+            p.life--;
+          }
+        });
+
+        if (particles.length > 0) {
+          requestAnimationFrame(drawParticles);
+        } else {
+          fireworks.style.display = 'none';
+          fireworksSound.pause();
+        }
+      }
+
+      for (let i = 0; i < 300; i++) {
+        createParticle(canvas.width / 2, canvas.height / 2);
+      }
+
+      drawParticles();
+
+      // 隱藏煙火效果15秒後
+      setTimeout(() => {
+        fireworks.style.display = 'none';
+        fireworksSound.pause();
+      }, 15000);
+    }
+  </script>
+</body>
+</html>
